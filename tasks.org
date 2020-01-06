@@ -1,0 +1,26 @@
+* TODO Identify our existing course learning objectives
+
+My first goal is to figure out what, exactly, we're teaching in current first
+year courses. I've only taught 3/5 of these courses, and one of those was an
+online version of the course that's probably really out of date.
+
+This goal is really what I consider to be my minimal success criteria in
+terms of our department gaining something from my work.
+
+- [ ] COMP 1010
+- [ ] COMP 1020
+- [ ] COMP 1012
+- [ ] COMP 1500
+- [ ] COMP 1600
+
+* TODO Identify course learning objectives for *other* institutions
+
+We've got our own internal, current goals for courses in the first year. What
+do other institutions do? Domestic institutions? Different levels/kinds (high
+school, college, university)? International? Having an idea of what's the
+"best practice" in current introductory CS education might be helpful in
+informing what we're doing internally.
+
+* TODO Critically assess learning objectives
+
+
