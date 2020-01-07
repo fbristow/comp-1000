@@ -10,51 +10,11 @@ online version of the course that's probably really out of date.
 This goal is really what I consider to be my minimal success criteria in
 terms of our department gaining something from my work.
 
-COMP 1010
----------
-
-Where can I get information for this course?
-
-* [Jim's textbook]
-* Heather Matheson (taught in Fall 2019)
-
-[Jim's textbook]: https://cs.umanitoba.ca/~young/learnToProgram/
-
-COMP 1020
----------
-
-Where can I get information for this course?
-
-* David Scuse's textbook (need to find)
-* D2L course (I taught DE version of this course)
-* Olivier Tremblay-Savard (taught in Fall 2019)
-
-COMP 1012
----------
-
-Where can I get information for this course?
-
-* [Langtangen's textbook]
-* Me
-* Rob Guderian (taught in Fall 2019)
-
-COMP 1500
----------
-
-Where can I get information for this course?
-
-* Jim's COMP 1500 textbook
-* Me
-* Gord Boyer (taught in Fall 2019)
-
-COMP 1600
----------
-
-Where can I get information for this course?
-
-* Christina Penner (teaching in Winter 2020)
-* Gord Boyer
-* Al Marshall
+* [COMP 1010](existing/COMP 1010)
+* [COMP 1020](existing/COMP 1020)
+* [COMP 1012](existing/COMP 1012)
+* [COMP 1500](existing/COMP 1500)
+* [COMP 1600](existing/COMP 1600)
 
 Identify course learning objectives for *other* institutions
 ============================================================
@@ -66,6 +26,14 @@ do other institutions do? Domestic institutions? Different levels/kinds (high
 school, college, university)? International? Having an idea of what's the
 "best practice" in current introductory CS education might be helpful in
 informing what we're doing internally.
+
+Samples:
+
+* <https://github.com/ossu/computer-science>
+* MIT 6.00{,01,02,SC}
+* USask CMPT 141
+* Waterloo CS 115
+
 
 Critically assess learning objectives
 =====================================
