@@ -1,3 +1,9 @@
+Progress
+========
+
+* [January 14, 2019](blog/January 14, 2019)
+
+
 Identify our existing course learning objectives
 ================================================
 
