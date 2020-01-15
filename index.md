@@ -2,6 +2,7 @@ Progress
 ========
 
 * [January 14, 2019](blog/January 14, 2019.md)
+* [January 15, 2019](blog/January 15, 2019.md)
 
 
 Identify our existing course learning objectives
@@ -17,7 +18,7 @@ This goal is really what I consider to be my minimal success criteria in
 terms of our department gaining something from my work.
 
 * [X] [COMP 1010](existing/COMP 1010.md)
-* [COMP 1020](existing/COMP 1020.md)
+* [ ] [COMP 1020](existing/COMP 1020.md)
 * [COMP 1012](existing/COMP 1012.md)
 * [COMP 1500](existing/COMP 1500.md)
 * [COMP 1600](existing/COMP 1600.md)
