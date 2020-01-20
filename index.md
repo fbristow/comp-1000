@@ -19,11 +19,11 @@ online version of the course that's probably really out of date.
 This goal is really what I consider to be my minimal success criteria in
 terms of our department gaining something from my work.
 
-* [X] [COMP 1010](existing/COMP 1010.md)
+* [ ] [COMP 1010](existing/COMP 1010.md)
 * [ ] [COMP 1020](existing/COMP 1020.md)
 * [COMP 1012](existing/COMP 1012.md)
 * [COMP 1500](existing/COMP 1500.md)
-* [COMP 1600](existing/COMP 1600.md)
+* ~~[COMP 1600](existing/COMP 1600.md)~~
 
 Identify course learning objectives for *other* institutions
 ============================================================
