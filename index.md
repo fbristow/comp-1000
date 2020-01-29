@@ -1,6 +1,7 @@
 Progress
 ========
 
+* [January 29, 2019](blog/January 29, 2019.md)
 * [January 28, 2019](blog/January 28, 2019.md)
 * [January 27, 2019](blog/January 27, 2019.md)
 * [January 24, 2019](blog/January 24, 2019.md)
