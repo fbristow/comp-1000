@@ -1,6 +1,8 @@
 Progress
 ========
 
+* [February 7, 2020](blog/February 7, 2020.md)
+* [February 4, 2020](blog/February 4, 2020.md)
 * [January 31, 2019](blog/January 31, 2019.md)
 * [January 29, 2019](blog/January 29, 2019.md)
 * [January 28, 2019](blog/January 28, 2019.md)
@@ -18,7 +20,7 @@ Progress
 Identify our existing course learning objectives
 ================================================
 
-DEADLINE: <2020-01-24 Fri>
+DEADLINE: <2020-01-31 Fri>
 
 My first goal is to figure out what, exactly, we're teaching in current first
 year courses. I've only taught 3/5 of these courses, and one of those was an
@@ -27,10 +29,10 @@ online version of the course that's probably really out of date.
 This goal is really what I consider to be my minimal success criteria in
 terms of our department gaining something from my work.
 
-* [ ] [COMP 1010](existing/COMP 1010.md)
-* [ ] [COMP 1020](existing/COMP 1020.md)
-* [ ] [COMP 1012](existing/COMP 1012.md)
-* [ ] [COMP 1500](existing/COMP 1500.md)
+* [X] [COMP 1010](existing/COMP 1010.md)
+* [X] [COMP 1020](existing/COMP 1020.md)
+* [X] [COMP 1012](existing/COMP 1012.md)
+* [X] [COMP 1500](existing/COMP 1500.md)
 * ~~[COMP 1600](existing/COMP 1600.md)~~
 
 Identify course learning objectives for *other* institutions
@@ -47,7 +49,7 @@ informing what we're doing internally.
 Samples:
 
 * <https://github.com/ossu/computer-science>
-* MIT 6.00{,01,02,SC}
+* [MIT 6.00{,01,02,SC}](outside/MIT 6.00{,01,02,SC}.md)
 * USask CMPT 141
 * Waterloo CS 115
 
