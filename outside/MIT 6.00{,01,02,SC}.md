@@ -182,4 +182,31 @@ Learning outcomes
 
 #### Memory and Search Methods
 
-
+* Define the term "indirection".
+* Explain why a list cannot be sorted in sub-linear time.
+* Calculate where an element in an array would exist in memory given a starting
+  address.
+* Define the term "linked list".
+* Draw a diagram that represents a linked list.
+* Explain why binary search cannot be applied to a linked list.
+* Compare and contrast two different methods for representing a linked list
+  (pure links vs array of pointers/indirection).
+* List the requirements for data before binary search can be applied.
+* Define the term "amortized complexity".
+* Decide if sorting a list/array before searching makes sense given a certain
+  situation.
+* Describe the bubble sort sorting algorithm.
+* Describe the selection sort algorithm.
+* Define the term "invariant".
+* Use an invariant in an implementation of the selection sort algorithm.
+* Apply the selection sort algorithm to a list of integers.
+* State the runtime complexity of the selection sort algorithm.
+* Explain why the runtime complexity of selection sort is $O(n^2)$.
+* Describe how divide-and-conquer might be applied generally.
+* Describe the merge sort algorithm.
+* Apply the merge sort algorithm to a list of integers.
+* Write a program that implements various sorting algorithms.
+* Compare and contrast different sorting algorithms.
+* Use a `lambda` expression in a Python program as an argument to a function.
+* Explain how passing a function to a function is useful, particularly in
+  Sorting algorithms.
