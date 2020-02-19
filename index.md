@@ -1,6 +1,7 @@
 Progress
 ========
 
+* [February 20, 2020](blog/February 20, 2020.md)
 * [February 12, 2020](blog/February 12, 2020.md)
 * [February 7, 2020](blog/February 7, 2020.md)
 * [February 4, 2020](blog/February 4, 2020.md)
@@ -67,6 +68,9 @@ make sense? Does it make sense in terms of...
 - what students know coming in to the program?
 
 Can what we're currently teaching be improved? Focused?
+
+* [ ] [COMP 1010](reconsidered/COMP1010.md)
+* [ ] 
 
 Construct a new course, considering critical assessment
 =======================================================
