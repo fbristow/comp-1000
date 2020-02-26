@@ -2,6 +2,12 @@
 
 import panflute as pf
 import sys
+from collections import Counter
+
+tags = Counter()
+
+def prepare(doc):
+    pass
 
 def action(elem, doc):
     wrapped = elem
@@ -10,11 +16,20 @@ def action(elem, doc):
         tn = len(t)
         if tn > 1 and t[::tn-1] == '::':
             wrapped = pf.Emph(pf.SmallCaps(elem))
+            tags[t] += 1
 
     return wrapped
 
+def finalize(doc):
+    tags_list = pf.OrderedList(*[pf.ListItem(pf.Plain(pf.Str(text=f"{k}: {tags[k]}"))) for k in tags])
+    doc.content.insert(0, tags_list)
+#    for k in tags.keys():
+#        doc.content.insert(0, pf.Plain(pf.Str(text=k), pf.Space, pf.Str(text=str(tags[k]))))
+#    doc.content.insert(0, pf.Plain(pf.Str(text="Outcome"), pf.Space, pf.Str(text="tags:")))
+    pf.debug(tags.keys())
+
 def main(doc=None):
-    return pf.run_filter(action, doc=doc)
+    return pf.run_filter(action, prepare=prepare, finalize=finalize, doc=doc)
 
 if __name__ == "__main__":
     main()
