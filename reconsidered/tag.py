@@ -23,9 +23,6 @@ def action(elem, doc):
 def finalize(doc):
     tags_list = pf.OrderedList(*[pf.ListItem(pf.Plain(pf.Str(text=f"{k}: {tags[k]}"))) for k in tags])
     doc.content.insert(0, tags_list)
-#    for k in tags.keys():
-#        doc.content.insert(0, pf.Plain(pf.Str(text=k), pf.Space, pf.Str(text=str(tags[k]))))
-#    doc.content.insert(0, pf.Plain(pf.Str(text="Outcome"), pf.Space, pf.Str(text="tags:")))
     pf.debug(tags.keys())
 
 def main(doc=None):
