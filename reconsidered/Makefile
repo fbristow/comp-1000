@@ -1,10 +1,10 @@
-all: COMP1010.html COMP1010.pdf
+%.html: %.md tag.py
+	pandoc $< -o $@ -F ./tag.py --number-sections --standalone 
 
-COMP1010.html: COMP1010.md tag.py
-	pandoc COMP1010.md -o COMP1010.html -F ./tag.py --number-sections --number-offset=1009 --standalone 
+%.pdf: %.md tag.py
+	pandoc $< -o $@ -F ./tag.py --number-sections --pdf-engine=xelatex
 
-COMP1010.pdf: COMP1010.md tag.py
-	pandoc COMP1010.md -o COMP1010.pdf -F ./tag.py --number-sections --pdf-engine=xelatex 
+all: COMP1010.html COMP1010.pdf COMP1020.html COMP1020.pdf
 
 clean:
-	rm COMP1010.pdf COMP1010.html
+	rm *.pdf *.html

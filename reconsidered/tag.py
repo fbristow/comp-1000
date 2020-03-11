@@ -23,6 +23,8 @@ def action(elem, doc):
 def finalize(doc):
     tags_list = pf.OrderedList(*[pf.ListItem(pf.Plain(pf.Str(text=f"{k}: {tags[k]}"))) for k in tags])
     doc.content.insert(0, tags_list)
+    total_tags = sum(tags.values())
+    doc.content.insert(0, pf.Plain(pf.Str(text=str(total_tags))))
     pf.debug(tags.keys())
 
 def main(doc=None):
