@@ -1,6 +1,7 @@
 Progress
 ========
 
+* [March 22, 2020](blog/March 22, 2020.md)
 * [February 26, 2020](blog/February 26, 2020.md)
 * [February 20, 2020](blog/February 20, 2020.md)
 * [February 12, 2020](blog/February 12, 2020.md)
@@ -60,7 +61,7 @@ Samples:
 Critically assess learning objectives
 =====================================
 
-DEADLINE: <2020-03-06 Fri>
+DEADLINE: <2020-03-31 Fri>
 
 Does what we're currently teaching in our first year computer science courses
 make sense? Does it make sense in terms of...
@@ -70,8 +71,29 @@ make sense? Does it make sense in terms of...
 
 Can what we're currently teaching be improved? Focused?
 
-* [ ] [COMP 1010](reconsidered/COMP1010.md)
-* [ ] 
+Rewording and revising existing learning objectives
+---------------------------------------------------
+
+The learning objectives and course outcomes that I gathered for COMP 1010 and
+COMP 1020 were very stream-of-consciousness on my part. I want to revise these
+learning objectives, and organize them by course outcome for each course.
+
+* [X] [COMP 1010](reconsidered/COMP1010.md)
+* [X] [COMP 1020](reconsidered/COMP1020.md)
+
+Critical assessment
+-------------------
+
+Based on what I can see, MIT leaps ahead of what we're doing very quickly. Given
+the current state of things, requesting learning outcomes from other, more local
+institutions isn't appropriate.
+
+I think a more appropriate comparison is the ACM learning objectives for its
+"Core-Tier 1" and "Core-Tier 2" lists of objectives in the [Curriculum
+Guidelines for Undergraduate Programs in Computer Science][cs2013].
+
+[cs2013]:
+https://www.acm.org/binaries/content/assets/education/cs2013_web_final.pdf
 
 Construct a new course, considering critical assessment
 =======================================================
