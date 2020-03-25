@@ -4,7 +4,10 @@ import panflute as pf
 import sys
 from collections import defaultdict 
 
-colours = [('black', '#c8c3cc'), ('white', '#563f46'), ('white', '#8ca3a3'), ('white', '#484f4f'), ('black', '#e0e2e4'), ('black', '#c6bcb6'), ('white', '#96897f'), ('white', '#7efa35'), ('black', '#cab577'), ('black', '#dbceb0'), ('white', '#838060'), ('white', '#4f3222')]
+colours = [('black', '#c8c3cc'), ('white', '#563f46'), ('white', '#8ca3a3'),
+        ('white', '#484f4f'), ('black', '#e0e2e4'), ('black', '#c6bcb6'),
+        ('white', '#96897f'), ('white', '#7efa35'), ('black', '#cab577'),
+        ('black', '#dbceb0'), ('white', '#838060'), ('white', '#4f3222')]
 colour_idx = 0
 
 def __default_tuple():
@@ -28,7 +31,6 @@ def action(elem, doc):
         if tn > 1 and t[::tn-1] == '::':
             tag = tags[t]
             colour = colours[tag[0]]
-            pf.debug(colour)
             wrapped = pf.Span(pf.SmallCaps(elem), attributes={'style': f"color:{colour[0]};background-color:{colour[1]};border:1px solid black;"})
             # The tags are written in `pf.Str` elements at the end of a learning
             # objective. The parent is a `pf.Plain` element, and *that* 
