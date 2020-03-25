@@ -1,5 +1,5 @@
-%.html: %.md tag.py
-	pandoc $< -o $@ -F ./tag.py --number-sections --standalone --section-divs
+%.html: %.md tag.py 
+	pandoc $< -o $@ -F ./tag.py --number-sections --standalone --toc --toc-depth 1 
 
 %.pdf: %.md tag.py
 	pandoc $< -o $@ -F ./tag.py --number-sections --pdf-engine=xelatex --section-divs
