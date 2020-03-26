@@ -4,14 +4,11 @@ import panflute as pf
 import sys
 from collections import defaultdict 
 
-html_colours = [('black', '#c8c3cc'), ('white', '#563f46'), ('white', '#8ca3a3'),
-        ('white', '#484f4f'), ('black', '#e0e2e4'), ('black', '#c6bcb6'),
-        ('white', '#96897f'), ('white', '#7efa35'), ('black', '#cab577'),
-        ('black', '#dbceb0'), ('white', '#838060'), ('white', '#4f3222')]
-latex_colours = [('black', 'cyan'), ('white', 'brown'), ('white', 'darkgray'),
+colours = [('black', 'cyan'), ('white', 'brown'), ('white', 'darkgray'),
         ('black', 'green'), ('white', 'magenta'), ('white', 'olive'), 
         ('white', 'purple'), ('black', 'teal'), ('white', 'violet'), 
-        ('black', 'yellow'), ('white', 'black'), ('white', 'RawSienna')]
+        ('black', 'yellow'), ('white', 'black'), ('white', 'gray')]
+
 colour_idx = 0
 
 def __default_tuple():
@@ -21,9 +18,10 @@ def __default_tuple():
     return v
 
 tags = defaultdict(__default_tuple)
+tag_sequence = []
 
 def prepare(doc):
-    pf.debug(dir(doc))
+    pass
 
 def action(elem, doc):
     wrapped = elem
@@ -34,11 +32,11 @@ def action(elem, doc):
         # (e.g., :likethis:), then it's a tag that we should capture
         if tn > 1 and t[::tn-1] == '::':
             tag = tags[t]
+            tag_sequence.append(t)
+            colour = colours[tag[0]]
             if doc.format in ('html', 'html5'):
-                colour = html_colours[tag[0]]
                 wrapped = pf.Span(pf.SmallCaps(elem), attributes={'style': f"color:{colour[0]};background-color:{colour[1]};border:1px solid black;"})
             elif doc.format == 'latex':
-                colour = latex_colours[tag[0]]
                 wrapped = pf.Span(pf.RawInline(f"\\colorbox{{{colour[1]}}}{{\\color{{{colour[0]}}}{t}}}", format='latex'))
             # The tags are written in `pf.Str` elements at the end of a learning
             # objective. The parent is a `pf.Plain` element, and *that* 
@@ -48,8 +46,32 @@ def action(elem, doc):
 
     return wrapped
 
+def html_colour_block():
+    pass
+
+def latex_colour_block():
+    pass
+
 def finalize(doc):
     content = doc.content
+
+    colour_boxes = []
+    count = 0
+    for t in tag_sequence:
+        tag = tags[t]
+        colour = colours[tag[0]]
+        if doc.format in ('html', 'html5'):
+            div = pf.Span(attributes={'style': f"width:4px;height:4px;background-color:{colour[1]};float:left"})
+        elif doc.format == 'latex':
+            div = pf.RawInline(f"\\colorbox{{{colour[1]}}}{{\makebox[1pt]{{~}}}}", format='latex')
+            if count % 60 == 0:
+                colour_boxes.append(pf.LineBreak)
+            count += 1
+        colour_boxes.append(div)
+
+    colour_block = pf.Para(*colour_boxes)
+    content.insert(0, colour_block)
+
     content.append(pf.Header(pf.Str(text="Objectives organized by course outcome"), level=1, classes=['unnumbered'], identifier='organized'))
     for k in tags:
         # turn ":program:" into "Program"
