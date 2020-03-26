@@ -4,10 +4,14 @@ import panflute as pf
 import sys
 from collections import defaultdict 
 
-colours = [('black', '#c8c3cc'), ('white', '#563f46'), ('white', '#8ca3a3'),
+html_colours = [('black', '#c8c3cc'), ('white', '#563f46'), ('white', '#8ca3a3'),
         ('white', '#484f4f'), ('black', '#e0e2e4'), ('black', '#c6bcb6'),
         ('white', '#96897f'), ('white', '#7efa35'), ('black', '#cab577'),
         ('black', '#dbceb0'), ('white', '#838060'), ('white', '#4f3222')]
+latex_colours = [('black', 'cyan'), ('white', 'brown'), ('white', 'darkgray'),
+        ('black', 'green'), ('white', 'magenta'), ('white', 'olive'), 
+        ('white', 'purple'), ('black', 'teal'), ('white', 'violet'), 
+        ('black', 'yellow'), ('white', 'black'), ('white', 'RawSienna')]
 colour_idx = 0
 
 def __default_tuple():
@@ -19,7 +23,7 @@ def __default_tuple():
 tags = defaultdict(__default_tuple)
 
 def prepare(doc):
-    pass
+    pf.debug(dir(doc))
 
 def action(elem, doc):
     wrapped = elem
@@ -30,8 +34,12 @@ def action(elem, doc):
         # (e.g., :likethis:), then it's a tag that we should capture
         if tn > 1 and t[::tn-1] == '::':
             tag = tags[t]
-            colour = colours[tag[0]]
-            wrapped = pf.Span(pf.SmallCaps(elem), attributes={'style': f"color:{colour[0]};background-color:{colour[1]};border:1px solid black;"})
+            if doc.format in ('html', 'html5'):
+                colour = html_colours[tag[0]]
+                wrapped = pf.Span(pf.SmallCaps(elem), attributes={'style': f"color:{colour[0]};background-color:{colour[1]};border:1px solid black;"})
+            elif doc.format == 'latex':
+                colour = latex_colours[tag[0]]
+                wrapped = pf.Span(pf.RawInline(f"\\colorbox{{{colour[1]}}}{{\\color{{{colour[0]}}}{t}}}", format='latex'))
             # The tags are written in `pf.Str` elements at the end of a learning
             # objective. The parent is a `pf.Plain` element, and *that* 
             # element's parent is the `pf.ListItem` that I want to append at
