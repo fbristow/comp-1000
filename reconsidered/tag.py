@@ -8,7 +8,7 @@ colours = [('black', 'cyan'), ('white', 'brown'), ('white', 'darkgray'),
         ('black', 'green'), ('white', 'magenta'), ('white', 'olive'), 
         ('white', 'purple'), ('black', 'teal'), ('white', 'violet'), 
         ('black', 'yellow'), ('white', 'black'), ('white', 'gray')]
-
+labels = set()
 colour_idx = 0
 
 def __default_tuple():
@@ -31,18 +31,27 @@ def action(elem, doc):
         # if it's not an empty string and the text is surrounded by colons
         # (e.g., :likethis:), then it's a tag that we should capture
         if tn > 1 and t[::tn-1] == '::':
+            ref = ""
+            if "#" in t:
+                ref = t[t.index("#"):-1]
+                t = t[:t.index("#")] + ":"
+
+                if ref in labels:
+                    raise ValueError("Labels must be unique")
+                else:
+                    labels.add(ref)
             tag = tags[t]
             tag_sequence.append(t)
             colour = colours[tag[0]]
             if doc.format in ('html', 'html5'):
-                wrapped = pf.Span(pf.SmallCaps(elem), attributes={'style': f"color:{colour[0]};background-color:{colour[1]};border:1px solid black;"})
+                wrapped = pf.Span(pf.SmallCaps(pf.Str(t + ref)), attributes={'style': f"color:{colour[0]};background-color:{colour[1]};border:1px solid black;"})
             elif doc.format == 'latex':
                 wrapped = pf.Span(pf.RawInline(f"\\colorbox{{{colour[1]}}}{{\\color{{{colour[0]}}}{t}}}", format='latex'))
             # The tags are written in `pf.Str` elements at the end of a learning
             # objective. The parent is a `pf.Plain` element, and *that* 
             # element's parent is the `pf.ListItem` that I want to append at
             # the end of the document.
-            tags[t][1].append(elem.parent.parent)
+            tags[t][1].append(elem.ancestor(2))
 
     return wrapped
 
