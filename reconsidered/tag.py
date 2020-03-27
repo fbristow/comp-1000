@@ -44,9 +44,11 @@ def action(elem, doc):
             tag_sequence.append(t)
             colour = colours[tag[0]]
             if doc.format in ('html', 'html5'):
-                wrapped = pf.Span(pf.SmallCaps(pf.Str(t + ref)), attributes={'style': f"color:{colour[0]};background-color:{colour[1]};border:1px solid black;"})
+                wrapped = pf.Span(pf.Span(pf.SmallCaps(pf.Str(t)), attributes={'style': f"color:{colour[0]};background-color:{colour[1]};border:1px solid black;"}))
+                wrapped.content.append(pf.Span(pf.Space,pf.Str(ref), attributes={'style': "color:gray"}))
             elif doc.format == 'latex':
-                wrapped = pf.Span(pf.RawInline(f"\\colorbox{{{colour[1]}}}{{\\color{{{colour[0]}}}{t}}}", format='latex'))
+                wrapped = pf.Span(pf.Span(pf.RawInline(f"\\colorbox{{{colour[1]}}}{{\\color{{{colour[0]}}}{t}}}", format='latex')))
+                wrapped.content.append(pf.Span(pf.Space, pf.RawInline("{\\color{gray}", format='latex'), pf.Str(ref), pf.RawInline("}", format='latex')))
             # The tags are written in `pf.Str` elements at the end of a learning
             # objective. The parent is a `pf.Plain` element, and *that* 
             # element's parent is the `pf.ListItem` that I want to append at
