@@ -33,27 +33,33 @@ def action(elem, doc):
         if tn > 1 and t[::tn-1] == '::':
             ref = ""
             if "#" in t:
+                # if the tag contains an identifier (e.g., :like#this:),
+                # then we should extract the identifier (including the #)
                 ref = t[t.index("#"):-1]
+                # and turn the tag back into a regular tag (:likethis:)
                 t = t[:t.index("#")] + ":"
 
+                # a tag should only be added to the sequence and to the end of the file 
+                # when it's actually a learning objective
+                tag_sequence.append(t)
+                # The tags are written in `pf.Str` elements at the end of a learning
+                # objective. The parent is a `pf.Plain` element, and *that* 
+                # element's parent is the `pf.ListItem` that I want to append at
+                # the end of the document.
+                tags[t][1].append(elem.ancestor(2))
+
                 if ref in labels:
-                    raise ValueError("Labels must be unique")
+                    raise ValueError(f"Labels must be unique, {ref} has already been used.")
                 else:
                     labels.add(ref)
             tag = tags[t]
-            tag_sequence.append(t)
             colour = colours[tag[0]]
             if doc.format in ('html', 'html5'):
                 wrapped = pf.Span(pf.Span(pf.SmallCaps(pf.Str(t)), attributes={'style': f"color:{colour[0]};background-color:{colour[1]};border:1px solid black;"}))
-                wrapped.content.append(pf.Span(pf.Space,pf.Str(ref), attributes={'style': "color:gray"}))
+                wrapped.content.append(pf.Span(pf.Space,pf.Str(ref), attributes={'style': "color:lightgray"}))
             elif doc.format == 'latex':
                 wrapped = pf.Span(pf.Span(pf.RawInline(f"\\colorbox{{{colour[1]}}}{{\\color{{{colour[0]}}}{t}}}", format='latex')))
                 wrapped.content.append(pf.Span(pf.Space, pf.RawInline("{\\color{gray}", format='latex'), pf.Str(ref), pf.RawInline("}", format='latex')))
-            # The tags are written in `pf.Str` elements at the end of a learning
-            # objective. The parent is a `pf.Plain` element, and *that* 
-            # element's parent is the `pf.ListItem` that I want to append at
-            # the end of the document.
-            tags[t][1].append(elem.ancestor(2))
 
     return wrapped
 
