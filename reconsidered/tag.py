@@ -53,7 +53,7 @@ def action(elem, doc):
                 else:
                     labels.add(ref)
             tag = tags[t]
-            colour = colours[tag[0]]
+            colour = colours[tag[0]%len(colours)]
             if doc.format in ('html', 'html5'):
                 wrapped = pf.Span(pf.Span(pf.SmallCaps(pf.Str(t)), attributes={'style': f"color:{colour[0]};background-color:{colour[1]};border:1px solid black;"}))
                 wrapped.content.append(pf.Span(pf.Space,pf.Str(ref), attributes={'style': "color:lightgray"}))
@@ -71,12 +71,14 @@ def latex_colour_block():
 
 def finalize(doc):
     content = doc.content
+    title = doc.get_metadata('title').lower().replace(" ", "") + "-"
 
     colour_boxes = []
     count = 0
     for t in tag_sequence:
         tag = tags[t]
-        colour = colours[tag[0]]
+        #colour = colours[tag[0]]
+        colour = colours[tag[0]%len(colours)]
         if doc.format in ('html', 'html5'):
             div = pf.Span(attributes={'style': f"width:4px;height:4px;background-color:{colour[1]};float:left"})
         elif doc.format == 'latex':
@@ -89,11 +91,11 @@ def finalize(doc):
     colour_block = pf.Para(*colour_boxes)
     content.insert(0, colour_block)
 
-    content.append(pf.Header(pf.Str(text="Objectives organized by course outcome"), level=1, classes=['unnumbered'], identifier='organized'))
+    content.append(pf.Header(pf.Str(text="Objectives organized by course outcome"), level=2, classes=['unnumbered'], identifier=title+'organized'))
     for k in tags:
         # turn ":program:" into "Program"
         outcome = k[1:-1].capitalize()
-        content.append(pf.Header(pf.Str(text=outcome), level=2, classes=['unnumbered'], identifier=outcome))
+        content.append(pf.Header(pf.Str(text=outcome), level=3, classes=['unnumbered'], identifier=title+outcome))
         # the list in the dict is already a bunch of `pf.ListItem`, so just add
         # them in a new `pf.OrderedList`
         content.append(pf.OrderedList(*tags[k][1]))
