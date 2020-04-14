@@ -7,7 +7,11 @@ def prepare(doc):
 
 def action(elem, doc):
     if hasattr(elem, 'attributes') and 'tag' in elem.attributes:
-        pf.debug(elem)
+        pass
+    if isinstance(elem, pf.Span) and hasattr(elem, 'identifier'):
+        elem.content.append(pf.RawInline(f"\\label{{{elem.identifier}}}", format='tex'))
+
+    return elem
         
 def finalize(doc):
     pass

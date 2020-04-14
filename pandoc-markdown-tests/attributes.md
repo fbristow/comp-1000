@@ -1,5 +1,6 @@
 ---
 title: Testing attributes with pandoc
+toccolor: blue
 ---
 
 Making lists with labels
@@ -13,7 +14,7 @@ Here's a list with some labels:
 2. Second item {:tag#first-item:}
 3. Third item {:tag: #third-item}
 
-### Section 2
+### Section 2 {id=section-2}
 
 Here's another list with some labels in section 2:
 
@@ -29,3 +30,8 @@ came (@third-item). Does HTML render anything? Yes, it does!
 
 What about the (@fourth-item)? Can we see that? How about (@fifth-item) and its
 child (@sub-item-five)?
+
+[Fifth item](#that) is, I think, the sample that I want to proceed with. Let's
+see if I can refer to it by its ID now: \nameref{that}
+
+How about referring to sections by ID? \nameref{section-2}

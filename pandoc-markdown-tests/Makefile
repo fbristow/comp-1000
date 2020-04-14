@@ -29,17 +29,17 @@ example-lists.tex: example-lists.md
 example-lists.pdf: example-lists.md
 	pandoc example-lists.md -o example-lists.pdf --pdf-engine=xelatex
 
-attributes.html: attributes.md tagattribute.py
-	pandoc attributes.md -f markdown+fenced_code_attributes -o attributes.html --standalone -F tagattribute.py
+attributes.html: attributes.md nameref.py nameref.py
+	pandoc attributes.md -o attributes.html --standalone -F nameref.py -F nameref.py
 
 attributes.json: attributes.md
-	pandoc attributes.md -f markdown+fenced_code_attributes -t json | python3 -mjson.tool > attributes.json
+	pandoc attributes.md -f markdown -t json | python3 -mjson.tool > attributes.json
 
-attributes.tex: attributes.md
-	pandoc attributes.md -f markdown+fenced_code_attributes -o attributes.tex --standalone
+attributes.tex: attributes.md nameref.py
+	pandoc attributes.md -f markdown -o attributes.tex --standalone -F nameref.py
 
-attributes.pdf: attributes.md tagattribute.py
-	pandoc attributes.md -f markdown+fenced_code_attributes -o attributes.pdf --pdf-engine=xelatex -F tagattribute.py
+attributes.pdf: attributes.md nameref.py
+	pandoc attributes.md -f markdown -o attributes.pdf --pdf-engine=xelatex -F nameref.py
 
 sections.html: sections.md nameref.py
 	pandoc sections.md -o sections.html --standalone --toc --number-sections --number-offset=1010 -F nameref.py

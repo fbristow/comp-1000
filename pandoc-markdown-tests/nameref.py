@@ -9,6 +9,9 @@ def prepare(doc):
 section = None
 
 def action(elem, doc):
+
+    global section
+
     nameref = "\\nameref{"
     if isinstance(elem, pf.RawInline) and elem.format == 'tex' and elem.text.startswith(nameref):
         # get the ref out of the text (turns "\nameref{header}" into "header"):
@@ -23,6 +26,7 @@ def action(elem, doc):
 
         # Make a link to that section
         link = pf.Link(pf.Str(pf.stringify(section)), url=f"#{section_id}")
+        section = None
         return link
     
 def finalize(doc):
