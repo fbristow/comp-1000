@@ -29,8 +29,8 @@ example-lists.tex: example-lists.md
 example-lists.pdf: example-lists.md
 	pandoc example-lists.md -o example-lists.pdf --pdf-engine=xelatex
 
-attributes.html: attributes.md nameref.py nameref.py
-	pandoc attributes.md -o attributes.html --standalone -F nameref.py -F nameref.py
+attributes.html: attributes.md nameref.py list-span.py
+	pandoc attributes.md -o attributes.html --standalone -F nameref.py -F list-span.py
 
 attributes.json: attributes.md
 	pandoc attributes.md -f markdown -t json | python3 -mjson.tool > attributes.json
