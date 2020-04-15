@@ -19,21 +19,35 @@ def action(elem, doc):
 
         # strip the tags from the element before we proceed any further
         for tag in matches:
-            elem = elem.replace_keyword(tag, pf.Str(""))
+            elem = elem.replace_keyword(tag, pf.Space())
 
+        # strip the trailing whitespace (this is equivalent to a trim operation)
+        while type(plain.content[-1]) in (pf.Space, pf.SoftBreak):
+            del plain.content[-1]
+
+        # gather all of the tags/IDs on the learning objective into something
+        # that we can write out to an attribute on the span.
+        outcomes = []
+        identifiers = []
         for tag in matches:
             if "#" in tag:
-                identifier = tag[tag.index("#")+1:-1]
-                outcome = tag[:tag.index("#")] + ":"
+                identifiers.append(tag[tag.index("#")+1:-1])
+                outcomes.append(tag[:tag.index("#")] + ":")
             else:
-                identifier = ""
-                outcome = tag
+                outcomes.append(tag)
+        outcomes = " ".join(outcomes)
+
+        if len(identifiers) > 1:
+            pf.debug(f"Found multiple IDs: {identifiers}")
+            identifier = identifiers[0]
+        else:
+            identifier = ""
 
         # Take the existing contents of the `pf.Plain` that's the first child
         # of the `pf.ListItem` and embed that into a `pf.Span`. Then make the
         # `pf.Span` the only child of the `pf.Plain`.
         if matches:
-            span = pf.Span(*plain.content, identifier=identifier, attributes={"tag": outcome})
+            span = pf.Span(*plain.content, identifier=identifier, attributes={"tags": outcomes})
             plain.content.clear()
             plain.content.append(span)
 
