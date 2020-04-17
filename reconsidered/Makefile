@@ -1,19 +1,30 @@
-%.html: %.md tag.py 
-	pandoc $< -o $@ -F ./tag.py --number-sections --standalone --toc --toc-depth 1 
+SHELL   := /bin/bash
+SCRIPTS := group-by-outcome.py colour.py
 
-%.pdf: %.md tag.py
-	pandoc $< -o $@ -F ./tag.py --number-sections --pdf-engine=xelatex --toc --toc-depth 1
+all: COMP1010.html COMP1010.pdf COMP1020.html COMP1500.html
 
-all: COMP1010.html COMP1010.pdf COMP1020.html COMP1020.pdf COMP1500.html COMP1500.pdf COMP1000.html
+%.html: %-struct.md $(SCRIPTS)
+	pandoc $< -o $@ -F group-by-outcome.py -F colour.py --number-sections \
+		--standalone --toc --toc-depth 1 
 
-COMP1000.html: COMP1010.md COMP1020.md COMP1500.md
-	pandoc COMP1010.md -o COMP1010.html -F tag.py -F ./yamltitletoheaders.py --shift-heading-level-by=1
-	pandoc COMP1020.md -o COMP1020.html -F tag.py -F ./yamltitletoheaders.py --shift-heading-level-by=1
-	pandoc COMP1500.md -o COMP1500.html -F tag.py -F ./yamltitletoheaders.py --shift-heading-level-by=1
-	pandoc COMP1010.html COMP1020.html COMP1500.html --standalone --toc --toc-depth 2 -o COMP1000.html -M 'title=COMP 1000' -M 'date=2020' -M 'author=Franklin Bristow'
+%.pdf: %-struct.md $(SCRIPTS)
+	pandoc $< -o $@ -F group-by-outcome.py -F colour.py --number-sections \
+		--standalone --toc --toc-depth 1 --pdf-engine=xelatex
 
-COMP1000.pdf: COMP1000.html
-	pandoc COMP1000.html -o COMP1000.pdf --pdf-engine=xelatex
+%-struct.md: %.md tags-to-attr.py
+	cat <(sed -n '/^---$$/,/^---$$/p' $<) \
+		<(pandoc $< -f markdown-auto_identifiers --reference-links \
+			     --reference-location=section -F tags-to-attr.py -t markdown) \
+				 > $@
+
+# the extra `echo ""` is there because if there's no newline in between
+# files, pandoc gobbles up the header that's inserted
+COMP1000.html: COMP1010-struct.md COMP1020-struct.md COMP1500-struct.md 
+	cat <(pandoc COMP1010-struct.md -F yamltitletoheaders.py --shift-heading-level-by=1 -t markdown) \
+		<(echo "") \
+	    <(pandoc COMP1020-struct.md -F yamltitletoheaders.py --shift-heading-level-by=1 -t markdown) | \
+	pandoc -f markdown -F colour.py -o $@ --standalone --toc --toc-depth 2 -M 'title=COMP 1000' \
+		-M date=2020 -M author='Franklin Bristow'
 
 clean:
-	rm *.pdf *.html
+	rm -f *.pdf *.html *-struct.md

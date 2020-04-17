@@ -37,7 +37,9 @@ def action(elem, doc):
                 outcomes.append(tag)
         outcomes = " ".join(outcomes)
 
-        if len(identifiers) > 1:
+        if len(identifiers) == 1:
+            identifier = identifiers[0]
+        elif len(identifiers) > 1:
             pf.debug(f"Found multiple IDs: {identifiers}")
             identifier = identifiers[0]
         else:
@@ -47,7 +49,7 @@ def action(elem, doc):
         # of the `pf.ListItem` and embed that into a `pf.Span`. Then make the
         # `pf.Span` the only child of the `pf.Plain`.
         if matches:
-            span = pf.Span(*plain.content, identifier=identifier, attributes={"tags": outcomes})
+            span = pf.Span(*plain.content, identifier=identifier, attributes={"outcomes": outcomes})
             plain.content.clear()
             plain.content.append(span)
 
