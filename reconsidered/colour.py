@@ -6,7 +6,8 @@ from collections import deque
 colours = deque([('black', 'cyan'), ('white', 'brown'), ('white', 'darkgray'),
         ('black', 'green'), ('white', 'magenta'), ('white', 'olive'), 
         ('white', 'purple'), ('black', 'teal'), ('white', 'violet'), 
-        ('black', 'yellow'), ('white', 'black'), ('white', 'gray')])
+        ('black', 'yellow'), ('white', 'black'), ('white', 'gray'),
+        ('white', 'blue'), ('blue', 'orange'), ('black', 'red')])
 tag_sequence = []
 outcome_colours = dict()
 
