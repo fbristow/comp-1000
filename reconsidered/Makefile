@@ -15,28 +15,25 @@ all: COMP1010.html COMP1010.pdf COMP1020.html COMP1500.html COMP1000.pdf COMP100
 	cat <(sed -n '/^---$$/,/^---$$/p' $<) \
 		<(pandoc $< -f markdown-auto_identifiers --reference-links \
 			     --reference-location=section -F tags-to-attr.py \
-				 -F group-by-outcome.py -t markdown) \
+				 -F group-by-outcome.py -t markdown+raw_tex) \
 				 > $@
 
 # the extra `echo ""` is there because if there's no newline in between
 # files, pandoc gobbles up the header that's inserted
-COMP1000.html: COMP1010-struct.md COMP1020-struct.md COMP1500-struct.md yamltitletoheaders.py
+COMP-all-struct.md: COMP1010-struct.md COMP1020-struct.md COMP1500-struct.md yamltitletoheaders.py
 	cat <(pandoc COMP1010-struct.md -F yamltitletoheaders.py --shift-heading-level-by=1 -t markdown) \
 		<(echo "") \
 	    <(pandoc COMP1020-struct.md -F yamltitletoheaders.py --shift-heading-level-by=1 -t markdown) \
 		<(echo "") \
-	    <(pandoc COMP1500-struct.md -F yamltitletoheaders.py --shift-heading-level-by=1 -t markdown) | \
-	pandoc -f markdown -F colour.py -o $@ --standalone --toc --toc-depth 2 -M 'title=COMP 1000' \
-		-M date=2020 -M author='Franklin Bristow'
+	    <(pandoc COMP1500-struct.md -F yamltitletoheaders.py --shift-heading-level-by=1 -t markdown) > \
+		COMP-all-struct.md
 
-COMP1000.pdf: COMP1010-struct.md COMP1020-struct.md COMP1500-struct.md yamltitletoheaders.py
-	cat <(pandoc COMP1010-struct.md -F yamltitletoheaders.py --shift-heading-level-by=1 -t markdown) \
-		<(echo "") \
-	    <(pandoc COMP1020-struct.md -F yamltitletoheaders.py --shift-heading-level-by=1 -t markdown) \
-		<(echo "") \
-	    <(pandoc COMP1500-struct.md -F yamltitletoheaders.py --shift-heading-level-by=1 -t markdown) | \
-	pandoc -f markdown -F colour.py -o $@ --standalone --toc --toc-depth 2 -M 'title=COMP 1000' \
-		-M date=2020 -M author='Franklin Bristow' -M toccolor=blue -V header-includes="\\usepackage{fullpage}" --pdf-engine=xelatex
+COMP1000.html: COMP-all-struct.md COMP1000.md colour.py nameref.py
+	pandoc COMP1000.md COMP-all-struct.md -F nameref.py -F colour.py -o $@ --standalone --toc --toc-depth 2 
+
+COMP1000.pdf: COMP1000.md COMP-all-struct.md colour.py nameref.py
+	pandoc COMP1000.md COMP-all-struct.md -F nameref.py -F colour.py -o $@ --standalone --toc --toc-depth 2 \
+		   --pdf-engine=xelatex
 
 clean:
 	rm -f *.pdf *.html *-struct.md
