@@ -24,7 +24,12 @@ def action(elem, doc):
         doc.walk(matches_id)
 
         # Make a link to that section
-        link = pf.Plain(pf.Link(pf.Str(pf.stringify(section)), url=f"#{section_id}"))
+        course = section.attributes['course']
+        outcomes = section.attributes['outcomes']
+        link = pf.Plain(pf.Str(pf.stringify(section)), pf.Space(),
+                pf.Str(outcomes), pf.Space(),
+                pf.Link(pf.Str(f"({course}#{section_id})"),
+                    url=f"#{section_id}"))
         section = None
         return link
     
