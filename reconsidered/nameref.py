@@ -4,7 +4,7 @@ import re
 import panflute as pf
 
 # e.g., [*link] or [=link-id]
-ref_pattern = re.compile("\[[\*=][\w-]+\]")
+ref_pattern = re.compile("\[[\*=~][\w-]+\]")
 
 def prepare(doc):
     pass
@@ -42,13 +42,14 @@ def action(elem, doc):
             if ref_type == '*':
                 # Dereferencing type: fill in the learning objective with a link
                 # back to the original.
-                elems.append(pf.Span(pf.Str(pf.stringify(section)), pf.Space(),
-                        pf.Link(pf.Str(f"({course})"),
-                            url=f"#{section_id}"), attributes={"outcomes": outcomes}))
-            elif ref_type == '=':
-                # Equivalent to, just put a link back to the original.
+                elems.append(pf.Span(section, pf.Space(),
+                        pf.Link(pf.Str(f"({course})"), url=f"#{section_id}"), attributes={
+                                 "source-id": section_id}))
+            elif ref_type in ('=', '~'):
+                # Equivalent to or approximates, just put a link back to the original.
                 elems.append(pf.Space())
-                elems.append(pf.Link(pf.Str(f"(equiv {course}#{section_id})"), url=f"#{section_id}"))
+                elems.append(pf.Link(pf.Str(f"({ref_type}{course})"), url=f"#{section_id}",
+                        title=f"{course}#{section_id}"))
 
         return pf.Plain(*elems)
     
