@@ -29,12 +29,12 @@ COMP-all-struct.md: COMP1010-struct.md COMP1020-struct.md COMP1500-struct.md yam
 	    <(pandoc COMP1500-struct.md -F yamltitletoheaders.py --shift-heading-level-by=1 -t markdown) > \
 		COMP-all-struct.md
 
-COMP1000.html: COMP-all-struct.md COMP1000.md colour.py nameref.py tags-to-attr.py
-	pandoc COMP1000.md COMP-all-struct.md -F tags-to-attr.py -F nameref.py -F colour.py -o $@ --standalone --toc --toc-depth 2 
+COMP1000.html: COMP-all-struct.md COMP1000.md colour.py nameref.py tags-to-attr.py missing.py
+	pandoc COMP1000.md COMP-all-struct.md -F tags-to-attr.py -F nameref.py -F colour.py -F missing.py -o $@ --standalone --toc --toc-depth 2 
 
 COMP1000.pdf: COMP1000.md COMP-all-struct.md colour.py nameref.py tags-to-attr.py
 	pandoc COMP1000.md COMP-all-struct.md -F tags-to-attr.py -F nameref.py -F colour.py -o $@ --standalone --toc --toc-depth 2 \
-		   --pdf-engine=xelatex
+		   --number-sections --pdf-engine=xelatex
 
 clean:
 	rm -f *.pdf *.html *-struct.md

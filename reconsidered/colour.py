@@ -19,7 +19,10 @@ def action(elem, doc):
         outcomes = elem.attributes["outcomes"].split()
         outcome_spans = []
         for outcome in outcomes:
-            tag_sequence.append(outcome)
+
+            # only include outcomes in the sequence if there's an ID
+            if elem.identifier:
+                tag_sequence.append(outcome)
 
             outcome_spans.append(pf.Space())
 
@@ -47,7 +50,7 @@ def finalize(doc):
     for t in tag_sequence:
         colour = outcome_colours[t]
         if doc.format in ('html', 'html5'):
-            div = pf.Span(attributes={'style': f"width:4px;height:4px;background-color:{colour[1]};float:left"})
+            div = pf.Span(attributes={'style': f"width:4px;height:40px;background-color:{colour[1]};float:left"})
         elif doc.format == 'latex':
             div = pf.RawInline(f"\\colorbox{{{colour[1]}}}{{\makebox[1pt]{{~}}}}", format='latex')
             # The LaTeX boxes don't wrap automatically. I'm sure there's a nicer way
@@ -57,7 +60,7 @@ def finalize(doc):
             count += 1
         colour_boxes.append(div)
 
-    colour_block = pf.Para(*colour_boxes)
+    colour_block = pf.Div(pf.Plain(*colour_boxes), attributes={'style': 'height:45px'})
     content.insert(0, colour_block)
 
 def main(doc=None):
