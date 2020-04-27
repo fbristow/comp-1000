@@ -1,6 +1,7 @@
 Progress
 ========
 
+* [April 27, 2020](blog/April 27, 2020.md)
 * [April 24, 2020](blog/April 24, 2020.md)
 * [April 23, 2020](blog/April 23, 2020.md)
 * [April 22, 2020](blog/April 22, 2020.md)

@@ -2,9 +2,17 @@
 
 import re
 import panflute as pf
+from collections import defaultdict
 
-# e.g., [*link] or [=link-id]
+# e.g., [*link], [=link-id], [~id]
 ref_pattern = re.compile("\[[\*=~][\w-]+\]")
+ref_types = {
+        "~": {
+            "latex" : pf.RawInline("$\\approx$", format='tex'),
+            "html"  : pf.RawInline("&asymp;")
+        },
+        "=": defaultdict(lambda: pf.Str("="))
+}
 
 def prepare(doc):
     pass
@@ -47,8 +55,9 @@ def action(elem, doc):
                                  "source-id": section_id}))
             elif ref_type in ('=', '~'):
                 # Equivalent to or approximates, just put a link back to the original.
+                ref_type = ref_types[ref_type][doc.format]
                 elems.append(pf.Space())
-                elems.append(pf.Link(pf.Str(f"({ref_type}{course})"), url=f"#{section_id}",
+                elems.append(pf.Link(pf.Str("("), ref_type, pf.Str(f"{course})"), url=f"#{section_id}",
                         title=f"{course}#{section_id}"))
 
         return pf.Plain(*elems)
