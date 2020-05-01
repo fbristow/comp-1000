@@ -1,10 +1,11 @@
 #!/usr/bin/python3
 
 import panflute as pf
-from collections import defaultdict
+import itertools
+from collections import OrderedDict, defaultdict
 
 referenced_ids = set()
-all_ids = dict()
+all_ids = OrderedDict()
 
 def prepare(doc):
     pass
@@ -23,11 +24,9 @@ def action(elem, doc):
         # (indicating that it's a copy).
         if elem.identifier and not hasattr(elem.parent, "attributes"):
             all_ids[elem.identifier] = elem
-    
-def finalize(doc):
-    unused_ids = all_ids.keys() - referenced_ids
 
-    unused = defaultdict(lambda: defaultdict(list))
+def materialize_unused(doc, unused_ids):
+    unused = defaultdict(OrderedDict)
     for unused_id in unused_ids:
         # find the nearest header for that element.
         ancestor = all_ids[unused_id]
@@ -38,16 +37,39 @@ def finalize(doc):
         #### Spin backwards until you find a header
         while not isinstance(ancestor, pf.Header):
             ancestor = ancestor.prev
-        unused[course][ancestor].append(all_ids[unused_id])
+        unused[course].setdefault(ancestor, list()).append(all_ids[unused_id])
+    return unused
 
-    for course in sorted(unused):
-        pf.debug(f"# {course}")
-        for header in unused[course]:
-            pf.debug(f"## {pf.stringify(header)}")
-            for objective in unused[course][header]:
-                pf.debug(f"* {pf.stringify(objective)}")
-            pf.debug("")
-        pf.debug("")
+def find_by_id(identifier, doc):
+    with_id = None
+    def matches_id(elem, doc):
+        nonlocal with_id
+        if hasattr(elem, 'identifier') and elem.identifier == identifier:
+            with_id = elem
+    doc.walk(matches_id)
+    return with_id
+    
+def finalize(doc):
+    objectives = materialize_unused(doc, all_ids)
+    unused_section = find_by_id('missing-objectives', doc)
+
+    spot = itertools.count(start=unused_section.index + 1)
+
+    for course in sorted(objectives):
+        doc.content.insert(next(spot), pf.Header(pf.Str(course), level=2))
+        for header in objectives[course]:
+            unit_list = pf.OrderedList()
+            for objective in objectives[course][header]:
+                if objective.identifier not in referenced_ids:
+                    # we've got a handle on the original `pf.Span`, so ask
+                    # for its grandparent to get the `pf.ListItem`.
+                    unit_list.content.append(objective.ancestor(2))
+
+            # Only put the header into the document *if* the unit actually
+            # has learning objectives that were not referenced.
+            if len(unit_list.content):
+                doc.content.insert(next(spot), header)
+                doc.content.insert(next(spot), unit_list)
 
 def main(doc=None):
     return pf.run_filter(action, prepare=prepare, finalize=finalize, doc=doc)
