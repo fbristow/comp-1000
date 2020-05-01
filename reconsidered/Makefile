@@ -1,14 +1,23 @@
-SHELL   := /bin/bash
-SCRIPTS := group-by-outcome.py colour.py
-GROUP_BY = #-F group-by-outcome.py
+SHELL    = /bin/bash
+EXISTING = COMP1010 COMP1020 COMP1500
+COURSES  = $(EXISTING) COMP1000
+SCRIPTS  = colour.py nameref.py tags-to-attr.py missing.py
+SHIFTED_EXISTING = $(addsuffix -shifted.md, $(EXISTING))
 
-all: COMP1010.html COMP1010.pdf COMP1020.html COMP1500.html COMP1000.pdf COMP1000.html
+# Even though the -shifted.md are listed explicitly as dependencies, they
+# should be deleted after the makefile completes.
+.INTERMEDIATE: $(SHIFTED_EXISTING)
 
-%.html: %-struct.md $(SCRIPTS)
+all: html pdfs
+
+pdfs: $(addsuffix .pdf, $(COURSES))
+html: $(addsuffix .html, $(COURSES))
+
+%.html: %-struct.md colour.py
 	pandoc $< -o $@ -F colour.py --number-sections --standalone --toc \
 		--toc-depth 1
 
-%.pdf: %-struct.md $(SCRIPTS)
+%.pdf: %-struct.md colour.py
 	pandoc $< -o $@ -F colour.py --number-sections --standalone --toc \
 		--toc-depth 1 --pdf-engine=xelatex
 
@@ -16,25 +25,20 @@ all: COMP1010.html COMP1010.pdf COMP1020.html COMP1500.html COMP1000.pdf COMP100
 	cat <(sed -n '/^---$$/,/^---$$/p' $<) \
 		<(pandoc $< -f markdown-auto_identifiers --reference-links \
 			     --reference-location=section -F tags-to-attr.py \
-				 $(GROUP_BY) -t markdown) \
-				 > $@
+				 -F group-by-outcome.py -t markdown) \
+		> $@
 
-# the extra `echo ""` is there because if there's no newline in between
-# files, pandoc gobbles up the header that's inserted
-COMP-all-struct.md: COMP1010-struct.md COMP1020-struct.md COMP1500-struct.md yamltitletoheaders.py
-	cat <(pandoc COMP1010-struct.md -F yamltitletoheaders.py --shift-heading-level-by=1 -t markdown) \
-		<(echo "") \
-	    <(pandoc COMP1020-struct.md -F yamltitletoheaders.py --shift-heading-level-by=1 -t markdown) \
-		<(echo "") \
-	    <(pandoc COMP1500-struct.md -F yamltitletoheaders.py --shift-heading-level-by=1 -t markdown) > \
-		COMP-all-struct.md
+%-shifted.md: %-struct.md yamltitletoheaders.py
+	pandoc $< -F yamltitletoheaders.py --shift-heading-level-by=2 -t markdown \
+			  -o $@
 
-COMP1000.html: COMP-all-struct.md COMP1000.md colour.py nameref.py tags-to-attr.py missing.py
-	pandoc COMP1000.md COMP-all-struct.md -F tags-to-attr.py -F nameref.py -F colour.py -F missing.py -o $@ --standalone --toc --toc-depth 2 
+COMP1000.html: COMP1000.md $(SHIFTED_EXISTING) $(SCRIPTS)
+	pandoc COMP1000.md $(SHIFTED_EXISTING) $(addprefix -F , $(SCRIPTS)) -o $@ \
+			--standalone --toc --toc-depth 2 
 
-COMP1000.pdf: COMP1000.md COMP-all-struct.md colour.py nameref.py tags-to-attr.py
-	pandoc COMP1000.md COMP-all-struct.md -F tags-to-attr.py -F nameref.py -F colour.py -o $@ --standalone --toc --toc-depth 2 \
-		   --number-sections --pdf-engine=xelatex
+COMP1000.pdf: COMP1000.md $(SHIFTED_EXISTING) $(SCRIPTS)
+	pandoc COMP1000.md $(SHIFTED_EXISTING) $(addprefix -F , $(SCRIPTS)) -o $@ \
+			--standalone --toc --toc-depth 2 --pdf-engine=xelatex
 
 clean:
-	rm -f *.pdf *.html *-struct.md
+	rm -f *.pdf *.html 
