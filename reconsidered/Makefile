@@ -1,7 +1,7 @@
 SHELL    = /bin/bash
 EXISTING = COMP1010 COMP1020 COMP1500
 COURSES  = $(EXISTING) COMP1000
-SCRIPTS  = colour.py nameref.py tags-to-attr.py missing.py
+SCRIPTS  = tags-to-attr.py nameref.py colour.py missing.py
 SHIFTED_EXISTING = $(addsuffix -shifted.md, $(EXISTING))
 
 # Even though the -shifted.md are listed explicitly as dependencies, they
