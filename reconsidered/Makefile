@@ -8,18 +8,18 @@ SHIFTED_EXISTING = $(addsuffix -shifted.md, $(EXISTING))
 # should be deleted after the makefile completes.
 .INTERMEDIATE: $(SHIFTED_EXISTING)
 
-all: html pdfs
+all: html pdfs 
 
 pdfs: $(addsuffix .pdf, $(COURSES))
 html: $(addsuffix .html, $(COURSES))
 
 %.html: %-struct.md colour.py
 	pandoc $< -o $@ -F colour.py --number-sections --standalone --toc \
-		--toc-depth 1
+		--toc-depth 2 --number-offset=$(@:COMP%.html=%)
 
 %.pdf: %-struct.md colour.py
 	pandoc $< -o $@ -F colour.py --number-sections --standalone --toc \
-		--toc-depth 1 --pdf-engine=xelatex
+		--toc-depth 2 --pdf-engine=xelatex 
 
 %-struct.md: %.md tags-to-attr.py group-by-outcome.py
 	cat <(sed -n '/^---$$/,/^---$$/p' $<) \
