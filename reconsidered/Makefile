@@ -19,7 +19,13 @@ html: $(addsuffix .html, $(COURSES))
 
 %.pdf: %-struct.md colour.py
 	pandoc $< -o $@ -F colour.py --number-sections --standalone --toc \
-		--toc-depth 2 --pdf-engine=xelatex 
+		--toc-depth 2 --pdf-engine=xelatex \
+		-V header-includes="\usepackage{tocstyle}" \
+		-V header-includes="\settocstylefeature{spaceafternumber}{0.5em}" \
+		-V header-includes="\usepackage{fullpage}" \
+		-V header-includes="\usepackage{tcolorbox}" \
+		-V header-includes="\setcounter{section}{$(@:COMP%.pdf=%)}" \
+		-V toccolor="blue"
 
 %-struct.md: %.md tags-to-attr.py group-by-outcome.py
 	cat <(sed -n '/^---$$/,/^---$$/p' $<) \
@@ -38,7 +44,14 @@ COMP1000.html: COMP1000.md $(SHIFTED_EXISTING) $(SCRIPTS)
 
 COMP1000.pdf: COMP1000.md $(SHIFTED_EXISTING) $(SCRIPTS)
 	pandoc COMP1000.md $(SHIFTED_EXISTING) $(addprefix -F , $(SCRIPTS)) -o $@ \
-			--standalone --toc --toc-depth 2 --pdf-engine=xelatex
+			--standalone --toc --toc-depth 2 --pdf-engine=xelatex \
+			-V header-includes="\usepackage{tocstyle}" \
+			-V header-includes="\settocstylefeature{spaceafternumber}{0.5em}" \
+			-V header-includes="\usepackage{fullpage}" \
+			-V header-includes="\usepackage{tcolorbox}" \
+			-V header-includes="\usepackage{appendix}" \
+			-V header-includes="\setcounter{section}{$(@:COMP%.pdf=%)}" \
+			-V toccolor="blue"
 
 clean:
 	rm -f *.pdf *.html 

@@ -57,12 +57,7 @@ def finalize(doc):
         if doc.format in ('html', 'html5'):
             div = pf.Span(attributes={'style': f"width:4px;height:40px;background-color:{colour[1]};float:left"})
         elif doc.format == 'latex':
-            div = pf.RawInline(f"\\colorbox{{{colour[1]}}}{{\\color{{{colour[0]}}}.}}", format='latex')
-            # The LaTeX boxes don't wrap automatically. I'm sure there's a nicer way
-            # do to this with LaTeX, but I can't be bothered to find out
-            if count % 54 == 0:
-                colour_boxes.append(pf.LineBreak)
-            count += 1
+            div = pf.RawInline(f"\\tcbox[tcbox width=forced center,boxrule=0mm,before=,after=,left=0mm,right=0mm,width=1mm,height=4em,arc=0mm,colframe={colour[1]},colback={colour[1]}]{{}}", format='latex')
         colour_boxes.append(div)
 
     colour_block = pf.Div(pf.Plain(*colour_boxes), attributes={'style': 'height:45px'})
