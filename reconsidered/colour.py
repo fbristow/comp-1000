@@ -41,7 +41,13 @@ def action(elem, doc):
                         f"color:{colour[0]};background-color:{colour[1]};border:1px solid black;"}))
             elif doc.format == 'latex':
                 outcome_spans.append(pf.Span(
-                    pf.RawInline(f"\\colorbox{{{colour[1]}}}{{\\color{{{colour[0]}}}{outcome}}}", format='latex')))
+                    pf.RawInline(f"""
+                    \\tcbox[on line,arc=0pt, outer arc=0pt,boxsep=0pt,boxrule=1pt,top=2pt,bottom=2pt,left=1pt,right=1pt,colback={colour[1]}]{{
+                        \\color{{{colour[0]}}}{outcome}
+                    }}
+                    """, format='latex')))
+
+                    #pf.RawInline(f"\\colorbox{{{colour[1]}}}{{\\color{{{colour[0]}}}{outcome}}}", format='latex')))
 
         elem.content.extend(outcome_spans)
 
@@ -62,6 +68,7 @@ def finalize(doc):
 
     colour_block = pf.Div(pf.Plain(*colour_boxes), attributes={'style': 'height:45px'})
     content.insert(0, colour_block)
+    content.insert(0, pf.Header(pf.Str("Learning objective barcode"), level=1, classes=["unlisted", "unnumbered"]))
 
 def main(doc=None):
     return pf.run_filter(action, prepare=prepare, finalize=finalize, doc=doc)
