@@ -19,7 +19,7 @@ def prepare(doc):
 def action(elem, doc):
     global collect_tags
     if isinstance(elem, pf.Header) and pf.stringify(elem) == "Learning objectives":
-        collect_tags = True
+        collect_tags = elem.index + 1
     if isinstance(elem, pf.Span) and "outcomes" in elem.attributes:
         outcomes = elem.attributes["outcomes"].split()
         outcome_spans = []
@@ -67,8 +67,8 @@ def finalize(doc):
         colour_boxes.append(div)
 
     colour_block = pf.Div(pf.Plain(*colour_boxes), attributes={'style': 'height:45px'})
-    content.insert(0, colour_block)
-    content.insert(0, pf.Header(pf.Str("Learning objective barcode"), level=1, classes=["unlisted", "unnumbered"]))
+    content.insert(collect_tags, colour_block)
+    content.insert(collect_tags, pf.Header(pf.Str("Learning objective barcode"), level=2, classes=["unlisted", "unnumbered"]))
 
 def main(doc=None):
     return pf.run_filter(action, prepare=prepare, finalize=finalize, doc=doc)
