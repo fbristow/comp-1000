@@ -47,8 +47,6 @@ def action(elem, doc):
                     }}
                     """, format='latex')))
 
-                    #pf.RawInline(f"\\colorbox{{{colour[1]}}}{{\\color{{{colour[0]}}}{outcome}}}", format='latex')))
-
         elem.content.extend(outcome_spans)
 
 
