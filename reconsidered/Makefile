@@ -15,6 +15,7 @@ html: $(addsuffix .html, $(COURSES))
 
 %.html: %-struct.md colour.py
 	pandoc $< -o $@ -F colour.py --number-sections --standalone --toc \
+		-V include-after='<script src="https://dohliam.github.io/dropin-minimal-css/switcher.js" type="text/javascript"></script>'\
 		--toc-depth 2 --number-offset=$(@:COMP%.html=%)
 
 %.pdf: %-struct.md colour.py
@@ -40,6 +41,7 @@ html: $(addsuffix .html, $(COURSES))
 
 COMP1000.html: COMP1000.md $(SHIFTED_EXISTING) $(SCRIPTS)
 	pandoc COMP1000.md $(SHIFTED_EXISTING) $(addprefix -F , $(SCRIPTS)) -o $@ \
+			-V include-after='<script src="https://dohliam.github.io/dropin-minimal-css/switcher.js" type="text/javascript"></script>'\
 			--standalone --toc --toc-depth 2 
 
 COMP1000.pdf: COMP1000.md $(SHIFTED_EXISTING) $(SCRIPTS)
