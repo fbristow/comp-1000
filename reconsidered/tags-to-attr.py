@@ -3,8 +3,8 @@
 import re
 import panflute as pf
 
-# e.g., :outcome#identifier:
-tag_pattern = re.compile(":[a-z#-]+:")
+# e.g., :outcome#identifier:, :outcome:, or &course&
+tag_pattern = re.compile("(?::[a-z#-]+:|&\d+&)")
 
 def prepare(doc):
     pass
@@ -30,13 +30,18 @@ def action(elem, doc):
         # that we can write out to an attribute on the span.
         outcomes = []
         identifiers = []
+        courses = []
         for tag in matches:
-            if "#" in tag:
+            if "&" in tag:
+                # this is not a tag, it's a course reference
+                courses.append(tag[1:-1])
+            elif "#" in tag:
                 identifiers.append(tag[tag.index("#")+1:-1])
                 outcomes.append(tag[:tag.index("#")] + ":")
             else:
                 outcomes.append(tag)
         outcomes = " ".join(outcomes)
+        courses = " ".join(courses)
 
         if len(identifiers) == 1:
             identifier = identifiers[0]
@@ -53,6 +58,8 @@ def action(elem, doc):
             span = pf.Span(*plain.content, identifier=identifier,
                     attributes={"outcomes": outcomes, "course":
                         pf.stringify(doc.metadata["title"])}) 
+            if courses:
+                span.attributes["used-in"] = courses
             plain.content.clear()
             plain.content.append(span)
 
