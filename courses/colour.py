@@ -21,7 +21,8 @@ def action(elem, doc):
     if isinstance(elem, pf.Header) and pf.stringify(elem) == "Learning objectives":
         collect_tags = elem.index + 1
     if isinstance(elem, pf.Span) and "used-in" in elem.attributes:
-        used_in = pf.Span(pf.Str(f"(Depended on by {elem.attributes['used-in']})"))
+        courses = ", ".join(elem.attributes['used-in'])
+        used_in = pf.Span(pf.Str(f"(Depended on by {courses})"))
         elem.content.append(pf.Space())
         elem.content.append(used_in)
     if isinstance(elem, pf.Span) and "outcomes" in elem.attributes:
