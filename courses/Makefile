@@ -3,6 +3,7 @@ EXISTING = COMP1010 COMP1020 COMP1500
 COURSES  = $(EXISTING) COMP1000
 SCRIPTS  = tags-to-attr.py nameref.py colour.py missing.py
 SHIFTED_EXISTING = $(addsuffix -shifted.md, $(EXISTING))
+TOCDEPTH = 3
 
 # Even though the -shifted.md are listed explicitly as dependencies, they
 # should be deleted after the makefile completes.
@@ -16,11 +17,11 @@ html: $(addsuffix .html, $(COURSES))
 %.html: %-struct.md colour.py
 	pandoc $< -o $@ -F colour.py --number-sections --standalone --toc \
 		-V include-after='<script src="https://dohliam.github.io/dropin-minimal-css/switcher.js" type="text/javascript"></script>'\
-		--toc-depth 2 --number-offset=$(@:COMP%.html=%)
+		--toc-depth $(TOCDEPTH) --number-offset=$(@:COMP%.html=%)
 
 %.pdf: %-struct.md colour.py
 	pandoc $< -o $@ -F colour.py --number-sections --standalone --toc \
-		--toc-depth 2 --pdf-engine=xelatex \
+		--toc-depth $(TOCDEPTH) --pdf-engine=xelatex \
 		-V header-includes="\usepackage{tocstyle}" \
 		-V header-includes="\settocstylefeature{spaceafternumber}{0.5em}" \
 		-V header-includes="\usepackage{fullpage}" \
@@ -42,11 +43,11 @@ html: $(addsuffix .html, $(COURSES))
 COMP1000.html: COMP1000.md $(SHIFTED_EXISTING) $(SCRIPTS)
 	pandoc COMP1000.md $(SHIFTED_EXISTING) $(addprefix -F , $(SCRIPTS)) -o $@ \
 			-V include-after='<script src="https://dohliam.github.io/dropin-minimal-css/switcher.js" type="text/javascript"></script>'\
-			--standalone --toc --toc-depth 2 
+			--standalone --toc --toc-depth $(TOCDEPTH)
 
 COMP1000.pdf: COMP1000.md $(SHIFTED_EXISTING) $(SCRIPTS)
 	pandoc COMP1000.md $(SHIFTED_EXISTING) $(addprefix -F , $(SCRIPTS)) -o $@ \
-			--standalone --toc --toc-depth 2 --pdf-engine=xelatex \
+			--standalone --toc --toc-depth $(TOCDEPTH) --pdf-engine=xelatex \
 			-V header-includes="\usepackage{tocstyle}" \
 			-V header-includes="\settocstylefeature{spaceafternumber}{0.5em}" \
 			-V header-includes="\usepackage{fullpage}" \
