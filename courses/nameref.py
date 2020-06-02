@@ -58,7 +58,7 @@ def action(elem, doc):
                 ref_type = ref_types[ref_type][doc.format]
                 elems.append(pf.Space())
                 elems.append(pf.Link(pf.Str("("), ref_type, pf.Str(f"{course})"), url=f"#{section_id}",
-                        title=f"{course}#{section_id}"))
+                        title=pf.stringify(section)))
 
         return pf.Plain(pf.Span(*elems, attributes={
                 "referenced-ids": " ".join(referenced_ids)
