@@ -10,8 +10,7 @@ def prepare(doc):
     pass
 
 def action(elem, doc):
-    pf.debug(elem)
-    if isinstance(elem, pf.ListItem) and isinstance(elem.content[0], pf.Plain):
+    if isinstance(elem, pf.ListItem) and elem.content and isinstance(elem.content[0], pf.Plain):
         plain = elem.content[0]
 
         stringy = pf.stringify(elem)
