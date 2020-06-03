@@ -56,7 +56,9 @@ def finalize(doc):
     spot = itertools.count(start=unused_section.index + 1)
 
     for course in sorted(objectives):
-        doc.content.insert(next(spot), pf.Header(pf.Str(course), level=2))
+        identifier = course.lower().replace(" ", "") + "-missing"
+        doc.content.insert(next(spot), pf.Header(pf.Str(course), level=2, 
+            identifier=identifier, classes=["unnumbered"]))
         for header in objectives[course]:
             unit_list = pf.OrderedList()
             for objective in objectives[course][header]:

@@ -41,7 +41,8 @@ html: $(addsuffix .html, $(COURSES))
 
 COMP1000.html: COMP1000.md $(SHIFTED_EXISTING) $(SCRIPTS)
 	pandoc COMP1000.md $(SHIFTED_EXISTING) $(addprefix -F , $(SCRIPTS)) -o $@ \
-			--standalone --toc --toc-depth $(TOCDEPTH)
+			--number-sections --standalone --toc --toc-depth $(TOCDEPTH) \
+			--number-offset=1000
 
 COMP1000.pdf: COMP1000.md $(SHIFTED_EXISTING) $(SCRIPTS)
 	pandoc COMP1000.md $(SHIFTED_EXISTING) $(addprefix -F , $(SCRIPTS)) -o $@ \
@@ -52,7 +53,7 @@ COMP1000.pdf: COMP1000.md $(SHIFTED_EXISTING) $(SCRIPTS)
 			-V header-includes="\usepackage{tcolorbox}" \
 			-V header-includes="\usepackage{appendix}" \
 			-V header-includes="\setcounter{section}{$(@:COMP%.pdf=%)}" \
-			-V toccolor="blue"
+			-V toccolor="blue" --number-sections
 
 clean:
 	rm -f *.pdf *.html 
