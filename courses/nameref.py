@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import re
+import copy
 import panflute as pf
 from collections import defaultdict
 
@@ -50,6 +51,8 @@ def action(elem, doc):
             if ref_type == '*':
                 # Dereferencing type: fill in the learning objective with a link
                 # back to the original.
+                section = copy.deepcopy(section)
+                section.identifier = ""
                 elems.append(section)
                 elems.append(pf.Space())
                 elems.append(pf.Link(pf.Str(f"({course})"), url=f"#{section_id}"))
