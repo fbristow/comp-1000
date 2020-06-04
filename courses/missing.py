@@ -73,6 +73,13 @@ def finalize(doc):
                 doc.content.insert(next(spot), header)
                 doc.content.insert(next(spot), unit_list)
 
+    # Any appendices (anything *after* the "missing objectives" section) should
+    # be unnumbered, because numbering gets difficult after that.
+    for elem in doc.content[next(spot):]:
+        if isinstance(elem, pf.Header):
+            elem.classes.append("unnumbered")
+
+
 def main(doc=None):
     return pf.run_filter(action, prepare=prepare, finalize=finalize, doc=doc)
 
