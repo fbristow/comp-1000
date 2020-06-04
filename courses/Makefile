@@ -39,13 +39,13 @@ html: $(addsuffix .html, $(COURSES))
 	pandoc $< -F yamltitletoheaders.py --shift-heading-level-by=2 -t markdown \
 			  -o $@
 
-COMP1000.html: COMP1000.md $(SHIFTED_EXISTING) $(SCRIPTS)
-	pandoc COMP1000.md $(SHIFTED_EXISTING) $(addprefix -F , $(SCRIPTS)) -o $@ \
+COMP1000.html: COMP1000.md appendix.md $(SHIFTED_EXISTING) $(SCRIPTS)
+	pandoc COMP1000.md appendix.md $(SHIFTED_EXISTING) $(addprefix -F , $(SCRIPTS)) -o $@ \
 			--number-sections --standalone --toc --toc-depth $(TOCDEPTH) \
 			--number-offset=1000
 
-COMP1000.pdf: COMP1000.md $(SHIFTED_EXISTING) $(SCRIPTS)
-	pandoc COMP1000.md $(SHIFTED_EXISTING) $(addprefix -F , $(SCRIPTS)) -o $@ \
+COMP1000.pdf: COMP1000.md appendix.tex $(SHIFTED_EXISTING) $(SCRIPTS)
+	pandoc COMP1000.md appendix.tex $(SHIFTED_EXISTING) $(addprefix -F , $(SCRIPTS)) -o $@ \
 			--standalone --toc --toc-depth $(TOCDEPTH) --pdf-engine=xelatex \
 			-V header-includes="\usepackage{tocstyle}" \
 			-V header-includes="\settocstylefeature{spaceafternumber}{0.5em}" \
