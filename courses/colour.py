@@ -12,12 +12,33 @@ colours = deque([('black', 'cyan'), ('white', 'brown'), ('white', 'darkgray'),
 collect_tags = False
 tag_sequence = []
 outcome_colours = dict()
+barcodes = []
 
 def prepare(doc):
     pass
 
+def build_course_barcode(doc):
+    content = doc.content
+    colour_boxes = []
+    count = 0
+    for t in tag_sequence:
+        colour = outcome_colours[t]
+        if doc.format in ('html', 'html5'):
+            div = pf.Span(attributes={'style': f"width:4px;height:40px;background-color:{colour[1]};float:left"})
+        elif doc.format == 'latex':
+            div = pf.RawInline(f"\\tcbox[tcbox width=forced center,boxrule=0mm,before=,after=,left=0mm,right=0mm,width=1mm,height=4em,arc=0mm,colframe={colour[1]},colback={colour[1]}]{{}}", format='latex')
+        colour_boxes.append(div)
+
+    colour_block = pf.Div(pf.Plain(*colour_boxes), attributes={'style': 'height:45px'})
+    barcodes.append((collect_tags, colour_block))
+
 def action(elem, doc):
-    global collect_tags
+    global collect_tags, tag_sequence
+    if isinstance(elem, pf.Header) and "course-title" in elem.classes and collect_tags:
+        # this is a course separator, we should reset state
+        build_course_barcode(doc)
+        collect_tags = False
+        tag_sequence = []
     if isinstance(elem, pf.Header) and pf.stringify(elem) == "Learning objectives":
         collect_tags = elem.index + 1
     if isinstance(elem, pf.Span) and "used-in" in elem.attributes:
@@ -29,7 +50,6 @@ def action(elem, doc):
         outcomes = elem.attributes["outcomes"].split()
         outcome_spans = []
         for outcome in outcomes:
-
             # only include outcomes in the sequence if there's an ID
             if collect_tags:
                 tag_sequence.append(outcome)
@@ -57,7 +77,6 @@ def action(elem, doc):
 
 def finalize(doc):
     content = doc.content
-    title = doc.get_metadata('title').lower().replace(" ", "") + "-"
 
     colour_boxes = []
     count = 0
@@ -70,8 +89,14 @@ def finalize(doc):
         colour_boxes.append(div)
 
     colour_block = pf.Div(pf.Plain(*colour_boxes), attributes={'style': 'height:45px'})
-    content.insert(collect_tags, colour_block)
-    content.insert(collect_tags, pf.Header(pf.Str("Learning objective barcode"), level=2, classes=["unlisted", "unnumbered"]))
+    barcodes.append((collect_tags, colour_block))
+    
+    # Now insert them in reverse order (biggest insertion point first) so that 
+    # when we insert things into the document, stuff below doesn't get shifted
+    # down.
+    barcodes.reverse()
+    for (spot, block) in barcodes:
+        content.insert(spot, block)
 
 def main(doc=None):
     return pf.run_filter(action, prepare=prepare, finalize=finalize, doc=doc)

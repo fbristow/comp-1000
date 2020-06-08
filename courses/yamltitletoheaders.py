@@ -14,7 +14,7 @@ def action(elem, doc):
         elem.identifier = title + elem.identifier
 
 def finalize(doc):
-    header = pf.Header(pf.Str(doc.get_metadata('title')), classes=["unnumbered"], level=2)
+    header = pf.Header(pf.Str(doc.get_metadata('title')), classes=["unnumbered", "course-title"], level=2)
     doc.content.insert(0, header)
 
 def main(doc=None):
