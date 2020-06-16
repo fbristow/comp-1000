@@ -4,6 +4,7 @@ import re
 import copy
 import panflute as pf
 from collections import defaultdict
+import panfluteplus as pfp
 
 # e.g., [*link], [=link-id], [~id]
 ref_pattern = re.compile("\[[\*=~][\w-]+\]")
@@ -37,11 +38,7 @@ def action(elem, doc):
             referenced_elem = None
             referenced_ids.append(referenced_id)
 
-            def matches_id(elem, doc):
-                nonlocal referenced_elem
-                if hasattr(elem, 'identifier') and elem.identifier == referenced_id:
-                    referenced_elem = elem
-            doc.walk(matches_id)
+            referenced_elem = pfp.find_by_id(referenced_id, doc)
 
             if not referenced_elem:
                 raise NameError(f"Element with ID {referenced_id} not found in document.")
@@ -54,12 +51,10 @@ def action(elem, doc):
                 # back to the original.
                 assert copied_elem is None
                 copied_elem = copy.deepcopy(referenced_elem.ancestor(2))
-                referenced_elem = None
                 # find the enclosed span with the ID. You know it's already in there,
                 # so this should be pretty fast.
-                copied_elem.walk(matches_id)
+                referenced_elem = pfp.find_by_id(referenced_id, copied_elem)
                 # referenced_elem should now be the `pf.Span` with the ID
-                assert referenced_elem is not None
                 enclosed_span = referenced_elem
                 referenced_elem.identifier = ""
                 referenced_elem.content.append(pf.Space())
@@ -70,8 +65,9 @@ def action(elem, doc):
                 # Equivalent to or approximates, just put a link back to the original.
                 ref_type = ref_types[ref_type][doc.format]
                 enclosed_span.content.append(pf.Space())
-                enclosed_span.content.append(pf.Link(pf.Str("("), ref_type, pf.Str(f"{course})"), url=f"#{referenced_id}",
-                        title=pf.stringify(enclosed_span)))
+                link = pf.Link(pf.Str("("), ref_type, pf.Str(f"{course})"), url=f"#{referenced_id}",
+                        title=pf.stringify(enclosed_span))
+                enclosed_span.content.append(link)
 
         assert enclosed_span is not None
         enclosed_span.attributes["referenced-ids"] = " ".join(referenced_ids)

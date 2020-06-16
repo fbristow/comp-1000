@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import panflute as pf
+import panfluteplus as pfp
 import itertools
 from collections import OrderedDict, defaultdict
 
@@ -40,18 +41,9 @@ def materialize_unused(doc, unused_ids):
         unused[course].setdefault(ancestor, list()).append(all_ids[unused_id])
     return unused
 
-def find_by_id(identifier, doc):
-    with_id = None
-    def matches_id(elem, doc):
-        nonlocal with_id
-        if hasattr(elem, 'identifier') and elem.identifier == identifier:
-            with_id = elem
-    doc.walk(matches_id)
-    return with_id
-    
 def finalize(doc):
     objectives = materialize_unused(doc, all_ids)
-    unused_section = find_by_id('missing-objectives', doc)
+    unused_section = pfp.find_by_id('missing-objectives', doc)
 
     spot = itertools.count(start=unused_section.index + 1)
 
