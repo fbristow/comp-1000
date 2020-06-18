@@ -49,3 +49,21 @@ def find_closest_ancestor_by_type(elem_type, elem):
         return None
     else:
         return elem
+
+def copy_listitem(elem):
+    """
+    Do a "deep copy" of the pf.ListItem so that we can freely modify this one
+    without affecting the original.
+
+    :param elem: the pf.ListItem to copy.
+    :rtype :class:`pf.ListItem`
+    """
+    import panflute as pf
+    import json
+    assert isinstance(elem, pf.ListItem)
+    json_copy = json.dumps(elem, default=lambda e: e.to_json(),
+                           check_circular=False, separators=(',', ':'),
+                           ensure_ascii=False)
+    copy = json.loads(json_copy, object_pairs_hook=pf.elements.from_json)
+    copy = pf.ListItem(*copy)
+    return copy

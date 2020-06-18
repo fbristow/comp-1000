@@ -52,7 +52,7 @@ def action(elem, doc):
                 # back to the original.
                 assert copied_elem is None
                 # copied_elem = copy.deepcopy(referenced_elem.ancestor(2))
-                copied_elem = pickle.loads(pickle.dumps(referenced_elem.ancestor(2)))
+                copied_elem = pfp.copy_listitem(referenced_elem.ancestor(2))
                 # find the enclosed span with the ID. You know it's already in there,
                 # so this should be pretty fast.
                 referenced_elem = pfp.find_by_id(referenced_id, copied_elem)

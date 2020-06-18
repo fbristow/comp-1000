@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import panflute as pf
+import panfluteplus as pfp
 import copy
 from collections import defaultdict
 
@@ -23,7 +24,7 @@ def action(elem, doc):
         # in the collection at the end, we **do not** want them to have any
         # of the metadata, so make a deep copy of the `pf.ListItem` and its
         # children, then strip any metadata from that copy
-        listitem = copy.deepcopy(elem.ancestor(2))
+        listitem = pfp.copy_listitem(elem.ancestor(2))
         def delete_span_meta(elem, doc):
             if isinstance(elem, pf.Span) and "outcomes" in elem.attributes:
                 elem.identifier = ""
