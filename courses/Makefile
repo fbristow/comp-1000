@@ -28,11 +28,11 @@ html: $(addsuffix .html, $(COURSES))
 		-V header-includes="\setcounter{section}{$(@:COMP%.pdf=%)}" \
 		-V toccolor="blue"
 
-%-struct.md: %.md tags-to-attr.py group-by-outcome.py
+%-struct.md: %.md tags-to-attr.py #group-by-outcome.py
 	cat <(sed -n '/^---$$/,/^---$$/p' $<) \
 		<(pandoc $< -f markdown-auto_identifiers --reference-links \
 			     --reference-location=section -F tags-to-attr.py \
-				 -F group-by-outcome.py -t markdown) \
+				 -t markdown) \
 		> $@
 
 %-shifted.md: %-struct.md yamltitletoheaders.py

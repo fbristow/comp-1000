@@ -3,8 +3,8 @@
 import re
 import copy
 import panflute as pf
-from collections import defaultdict
 import panfluteplus as pfp
+from collections import defaultdict
 
 # e.g., [*link], [=link-id], [~id]
 ref_pattern = re.compile("\[[\*=~][\w-]+\]")
@@ -60,13 +60,19 @@ def action(elem, doc):
                 referenced_elem.content.append(pf.Space())
                 referenced_elem.content.append(pf.Link(pf.Str(f"({course})"), url=f"#{referenced_id}"))
             elif ref_type in ('=', '~'):
-                # We **must** already have a `copied_elem`
-                assert enclosed_span is not None
+                if enclosed_span is None:
+                    # we're just adding adding equivalencies to a hard-coded
+                    # objective, so we have to find the nearest child pf.Span
+                    # of the currently inspected pf.ListItem
+                    enclosed_span = pfp.find_by_type(pf.Span, elem)
+                    # we need to get rid of the reference if we're doing hard-coded
+                    # equivalencies, since we're not replacing an entire element.
+                    enclosed_span.replace_keyword(match, pf.Str(""))
                 # Equivalent to or approximates, just put a link back to the original.
                 ref_type = ref_types[ref_type][doc.format]
                 enclosed_span.content.append(pf.Space())
                 link = pf.Link(pf.Str("("), ref_type, pf.Str(f"{course})"), url=f"#{referenced_id}",
-                        title=pf.stringify(enclosed_span))
+                        title=pf.stringify(referenced_elem))
                 enclosed_span.content.append(link)
 
         assert enclosed_span is not None
