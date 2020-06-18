@@ -2,6 +2,7 @@
 
 import re
 import copy
+import pickle
 import panflute as pf
 import panfluteplus as pfp
 from collections import defaultdict
@@ -50,7 +51,8 @@ def action(elem, doc):
                 # Dereferencing type: fill in the learning objective with a link
                 # back to the original.
                 assert copied_elem is None
-                copied_elem = copy.deepcopy(referenced_elem.ancestor(2))
+                # copied_elem = copy.deepcopy(referenced_elem.ancestor(2))
+                copied_elem = pickle.loads(pickle.dumps(referenced_elem.ancestor(2)))
                 # find the enclosed span with the ID. You know it's already in there,
                 # so this should be pretty fast.
                 referenced_elem = pfp.find_by_id(referenced_id, copied_elem)

@@ -49,5 +49,3 @@ def find_closest_ancestor_by_type(elem_type, elem):
         return None
     else:
         return elem
-
-
