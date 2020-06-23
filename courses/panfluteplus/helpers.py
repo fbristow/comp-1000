@@ -66,4 +66,5 @@ def copy_listitem(elem):
                            ensure_ascii=False)
     copy = json.loads(json_copy, object_pairs_hook=pf.elements.from_json)
     copy = pf.ListItem(*copy)
+    copy.parent = elem.parent
     return copy
