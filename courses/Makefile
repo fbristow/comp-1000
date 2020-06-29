@@ -1,7 +1,7 @@
 SHELL    = /bin/bash
 EXISTING = COMP1010 COMP1020 COMP1500
 COURSES  = $(EXISTING) COMP1000
-SCRIPTS  = tags-to-attr.py nameref.py colour.py missing.py
+SCRIPTS  = tags-to-attr.py nameref.py colour.py 
 SHIFTED_EXISTING = $(addsuffix -shifted.md, $(EXISTING))
 TOCDEPTH = 3
 
@@ -41,11 +41,29 @@ html: $(addsuffix .html, $(COURSES))
 
 COMP1000.html: COMP1000.md appendix.md $(SHIFTED_EXISTING) $(SCRIPTS)
 	pandoc COMP1000.md appendix.md $(SHIFTED_EXISTING) $(addprefix -F , $(SCRIPTS)) -o $@ \
+			-F missing.py \
 			--number-sections --standalone --toc --toc-depth $(TOCDEPTH) \
 			--number-offset=1000
 
 COMP1000.pdf: COMP1000.md appendix.tex $(SHIFTED_EXISTING) $(SCRIPTS)
 	pandoc COMP1000.md appendix.tex $(SHIFTED_EXISTING) $(addprefix -F , $(SCRIPTS)) -o $@ \
+			-F missing.py \
+			--standalone --toc --toc-depth $(TOCDEPTH) --pdf-engine=xelatex \
+			-V header-includes="\usepackage{tocstyle}" \
+			-V header-includes="\settocstylefeature{spaceafternumber}{0.5em}" \
+			-V header-includes="\usepackage{fullpage}" \
+			-V header-includes="\usepackage{tcolorbox}" \
+			-V header-includes="\usepackage{appendix}" \
+			-V header-includes="\setcounter{section}{$(@:COMP%.pdf=%)}" \
+			-V toccolor="blue" --number-sections
+
+COMP1020.html: COMP1020.md appendix.md COMP1010-shifted.md $(SCRIPTS)
+	pandoc COMP1020.md appendix.md COMP1010-shifted.md $(addprefix -F , $(SCRIPTS)) \
+		--number-sections --standalone --toc --toc-depth $(TOCDEPTH) \
+		--number-offset=1020 -o $@
+
+COMP1020.pdf: COMP1020.md appendix.tex COMP1010-shifted.md $(SCRIPTS)
+	pandoc COMP1020.md appendix.tex COMP1010-shifted.md $(addprefix -F , $(SCRIPTS)) -o $@ \
 			--standalone --toc --toc-depth $(TOCDEPTH) --pdf-engine=xelatex \
 			-V header-includes="\usepackage{tocstyle}" \
 			-V header-includes="\settocstylefeature{spaceafternumber}{0.5em}" \

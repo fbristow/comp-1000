@@ -1,6 +1,7 @@
 Progress
 ========
 
+* [June 29, 2020](blog/June 29, 2020.md)
 * [June 23, 2020](blog/June 23, 2020.md)
 * [June 22, 2020](blog/June 22, 2020.md)
 * [June 19, 2020](blog/June 19, 2020.md)
